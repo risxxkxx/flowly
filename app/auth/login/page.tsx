@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
 
+
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -63,6 +64,11 @@ export default function LoginPage() {
             autoComplete="current-password"
           />
         </div>
+        <div className="text-right">
+  <Link href="/auth/forgot-password" className="text-sm text-gray-500 hover:text-gray-900">
+    Forgot password?
+  </Link>
+</div>
 
         {error && (
           <div className="px-3.5 py-2.5 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">

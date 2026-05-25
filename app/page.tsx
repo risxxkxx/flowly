@@ -1,10 +1,64 @@
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Shield, CheckSquare, FolderOpen, Users, ArrowRight } from 'lucide-react'
+import en from '@/messages/en.json'
+import mk from '@/messages/mk.json'
+
+type Locale = 'en' | 'mk'
+
+const messages = { en, mk }
+
+function getCookieLocale(): Locale {
+  if (typeof document === 'undefined') return 'en'
+  const match = document.cookie.match(/(?:^|;\s*)vault_locale=(en|mk)/)
+  return match?.[1] === 'mk' ? 'mk' : 'en'
+}
+
+function saveLocale(locale: Locale) {
+  document.cookie = `vault_locale=${locale};path=/;max-age=31536000`
+}
 
 export default function HomePage() {
+  const [locale, setLocale] = useState<Locale>('en')
+
+  useEffect(() => {
+    setLocale(getCookieLocale())
+  }, [])
+
+  const t = useMemo(() => messages[locale].landing, [locale])
+
+  function changeLocale(nextLocale: Locale) {
+    setLocale(nextLocale)
+    saveLocale(nextLocale)
+  }
+
+  const features = [
+    {
+      icon: FolderOpen,
+      title: t.features.projects.title,
+      desc: t.features.projects.desc,
+    },
+    {
+      icon: CheckSquare,
+      title: t.features.tasks.title,
+      desc: t.features.tasks.desc,
+    },
+    {
+      icon: Shield,
+      title: t.features.twoWorlds.title,
+      desc: t.features.twoWorlds.desc,
+    },
+    {
+      icon: Users,
+      title: t.features.share.title,
+      desc: t.features.share.desc,
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Nav */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
@@ -12,40 +66,67 @@ export default function HomePage() {
           </div>
           <span className="font-semibold text-gray-900 tracking-tight">Flowly</span>
         </div>
+
         <div className="flex items-center gap-3">
-          <Link href="/auth/login" className="btn-ghost">Sign in</Link>
-          <Link href="/auth/register" className="btn-primary">Get started</Link>
+          <div className="flex items-center rounded-xl border border-gray-200 bg-white p-1">
+            <button
+              type="button"
+              onClick={() => changeLocale('en')}
+              className={`px-3 py-1.5 text-sm rounded-lg transition ${
+                locale === 'en'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => changeLocale('mk')}
+              className={`px-3 py-1.5 text-sm rounded-lg transition ${
+                locale === 'mk'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              MK
+            </button>
+          </div>
+
+          <Link href="/auth/login" className="btn-ghost">
+            {t.signIn}
+          </Link>
+          <Link href="/auth/register" className="btn-primary">
+            {t.startFree}
+          </Link>
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
         <h1 className="text-6xl font-semibold text-gray-900 tracking-tight mb-6 leading-tight">
-          Everything in one place.
+          {t.title}
         </h1>
+
         <p className="text-xl text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
-          Manage your work and personal life — projects, tasks, and goals — all under one roof.
+          {t.subtitle}
         </p>
+
         <div className="flex items-center justify-center gap-3">
           <Link href="/auth/register" className="btn-primary text-base px-6 py-3">
-            Start for free <ArrowRight size={16} />
+            {t.startFree} <ArrowRight size={16} />
           </Link>
+
           <Link href="/auth/login" className="btn-secondary text-base px-6 py-3">
-            Sign in
+            {t.signIn}
           </Link>
         </div>
-        <p className="mt-4 text-sm text-gray-400">Free · No credit card required</p>
+
+        <p className="mt-4 text-sm text-gray-400">{t.free}</p>
       </section>
 
-      {/* Features */}
       <section className="max-w-5xl mx-auto px-6 pb-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: FolderOpen, title: 'Projects', desc: 'Organize work and personal projects separately.' },
-            { icon: CheckSquare, title: 'Tasks', desc: 'Track to-dos with due dates inside each project.' },
-            { icon: Shield, title: 'Two worlds', desc: 'Work and Chores — completely separate spaces.' },
-            { icon: Users, title: 'Share access', desc: 'Invite others to view your projects read-only.' },
-          ].map(({ icon: Icon, title, desc }) => (
+          {features.map(({ icon: Icon, title, desc }) => (
             <div key={title} className="card p-6">
               <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4">
                 <Icon size={19} className="text-gray-700" />
@@ -57,13 +138,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t py-8" style={{borderColor:'#f1f5f9'}}>
+      <footer className="border-t py-8" style={{ borderColor: '#f1f5f9' }}>
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Shield size={14} />
             <span>Flowly</span>
           </div>
-          <span>Built with Next.js & Supabase</span>
+          <span>Plan work. Track time. Stay in flow.</span>
         </div>
       </footer>
     </div>

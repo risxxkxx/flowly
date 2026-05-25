@@ -6,17 +6,30 @@
     "signOut": "Sign out"
   },
   "landing": {
-    "title": "Everything in one place.",
-    "subtitle": "Manage your work and personal life — projects, tasks, and goals — all under one roof.",
-    "startFree": "Start for free",
-    "signIn": "Sign in",
-    "free": "Free · No credit card required",
-    "features": {
-      "projects": { "title": "Projects", "desc": "Organize work and personal projects separately." },
-      "tasks": { "title": "Tasks", "desc": "Track to-dos with due dates inside each project." },
-      "twoWorlds": { "title": "Two worlds", "desc": "Work and Chores — completely separate spaces." },
-      "share": { "title": "Share access", "desc": "Invite others to view your projects read-only." }
+  "title": "Plan work. Track time. Stay in flow.",
+  "subtitle": "Flowly helps you organize projects, manage tasks, track time, and stay focused in one simple workspace.",
+  "startFree": "Start for free",
+  "signIn": "Sign in",
+  "free": "Free · No credit card required",
+  "features": {
+    "projects": {
+      "title": "Projects",
+      "desc": "Organize client work, school tasks, or personal projects in one place."
+    },
+    "tasks": {
+      "title": "Tasks",
+      "desc": "Plan work with priorities, deadlines, statuses, and clear progress."
+    },
+    "twoWorlds": {
+      "title": "Time tracking",
+      "desc": "Start and stop timers to understand where your hours go."
+    },
+    "share": {
+      "title": "Simple collaboration",
+      "desc": "Invite others to view your projects and keep everyone aligned."
     }
+  }
+
   },
   "auth": {
     "welcomeBack": "Welcome back",
