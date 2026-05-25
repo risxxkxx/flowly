@@ -209,7 +209,7 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
     <div>
       {!readOnly && (
         <div className="mb-4">
-          <button onClick={() => setOpen(true)} className="btn-primary">
+          <button onClick={() => setOpen(true)} className="btn-primary w-full sm:w-auto justify-center">
             <Plus size={16} /> Add task
           </button>
         </div>
@@ -244,9 +244,9 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
                 </select>
               </div>
               {error && <div className="px-3.5 py-2.5 rounded-xl text-sm" style={{backgroundColor:'#fef2f2',color:'#dc2626',border:'1px solid #fecaca'}}>{error}</div>}
-              <div className="flex gap-3 pt-1">
-                <button type="button" onClick={() => setOpen(false)} className="btn-secondary flex-1">Cancel</button>
-                <button type="submit" className="btn-primary flex-1" disabled={saving}>
+              <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                <button type="button" onClick={() => setOpen(false)} className="btn-secondary flex-1 justify-center">Cancel</button>
+                <button type="submit" className="btn-primary flex-1 justify-center" disabled={saving}>
                   {saving && <Loader2 size={15} className="animate-spin" />}
                   Add task
                 </button>
@@ -288,12 +288,12 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
               </select>
             </div>
           </div>
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <p className="text-xs" style={{color:'#94a3b8'}}>
               Showing {filteredTasks.length} of {tasks.length} tasks
             </p>
             {hasActiveFilters && (
-              <button onClick={clearFilters} className="btn-ghost px-3 py-1.5 text-xs">Clear filters</button>
+              <button onClick={clearFilters} className="btn-ghost w-full sm:w-auto justify-center px-3 py-1.5 text-xs">Clear filters</button>
             )}
           </div>
         </div>
@@ -323,8 +323,8 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
             return (
               <div key={bucket.key} className="card overflow-hidden">
                 <div className="px-4 py-3" style={{backgroundColor:'#f8fafc',borderBottom:'1px solid #f1f5f9'}}>
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-gray-900">{bucket.label}</h3>
                       <p className="text-xs" style={{color:'#94a3b8'}}>{bucket.helper}</p>
                     </div>
@@ -376,48 +376,75 @@ function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, borde
   const dueColor = bucket === 'overdue' ? '#dc2626' : bucket === 'today' ? '#d97706' : '#94a3b8'
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 group transition-all duration-150 ${task.completed ? 'opacity-40' : ''}`}
-      style={border ? {borderTop:'1px solid #f1f5f9'} : {}}>
-      {!readOnly && (
-        <button onClick={() => onToggle(task)} className="flex-shrink-0 transition-colors"
-          style={{color: task.completed ? '#22c55e' : '#cbd5e1'}}>
-          {task.completed ? <CheckSquare size={17} /> : <Square size={17} />}
-        </button>
-      )}
-      <span className={`flex-1 text-sm ${task.completed ? 'line-through' : 'text-gray-800'}`}
-        style={task.completed ? {color:'#94a3b8'} : {}}>
-        {task.title}
-      </span>
-      <div className="hidden sm:flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium" style={{backgroundColor: priority.bg, color: priority.color}}>
-        <Flag size={10} />
-        {priority.label}
-      </div>
-      {task.due_date && !task.completed && (
-        <div className="flex items-center gap-1 text-xs" style={{color: dueColor}}>
-          <Calendar size={11} />
-          {format(new Date(task.due_date + 'T00:00:00'), 'MMM d')}
+    <div
+      className={`px-4 py-3 group transition-all duration-150 ${task.completed ? 'opacity-40' : ''}`}
+      style={border ? { borderTop: '1px solid #f1f5f9' } : {}}
+    >
+      <div className="flex items-start gap-3">
+        {!readOnly && (
+          <button
+            onClick={() => onToggle(task)}
+            className="flex-shrink-0 pt-0.5 transition-colors"
+            style={{ color: task.completed ? '#22c55e' : '#cbd5e1' }}
+            aria-label={task.completed ? 'Mark task as open' : 'Mark task as completed'}
+          >
+            {task.completed ? <CheckSquare size={17} /> : <Square size={17} />}
+          </button>
+        )}
+
+        <div className="min-w-0 flex-1">
+          <span
+            className={`block break-words text-sm leading-relaxed ${task.completed ? 'line-through' : 'text-gray-800'}`}
+            style={task.completed ? { color: '#94a3b8' } : {}}
+          >
+            {task.title}
+          </span>
+
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <div
+              className="flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium"
+              style={{ backgroundColor: priority.bg, color: priority.color }}
+            >
+              <Flag size={10} />
+              {priority.label}
+            </div>
+
+            {task.due_date && !task.completed && (
+              <div className="flex items-center gap-1 text-xs" style={{ color: dueColor }}>
+                <Calendar size={11} />
+                {format(new Date(task.due_date + 'T00:00:00'), 'MMM d')}
+              </div>
+            )}
+
+            <div className="flex items-center gap-1 text-xs" style={{ color: isRunning ? '#16a34a' : '#94a3b8' }}>
+              <Clock size={11} />
+              {formatDuration(seconds)}
+            </div>
+          </div>
         </div>
-      )}
-      <div className="flex items-center gap-1 text-xs" style={{color: isRunning ? '#16a34a' : '#94a3b8'}}>
-        <Clock size={11} />
-        {formatDuration(seconds)}
       </div>
-      {!readOnly && !task.completed && (
-        <button onClick={() => onToggleTimer(task)}
-          className="px-2 py-1 rounded-lg text-xs font-medium inline-flex items-center gap-1"
-          style={{backgroundColor: isRunning ? '#fef2f2' : '#f0fdf4', color: isRunning ? '#dc2626' : '#16a34a'}}>
-          {isRunning ? <Pause size={11} /> : <Play size={11} />}
-          {isRunning ? 'Stop' : 'Start'}
-        </button>
-      )}
+
       {!readOnly && (
-        <button onClick={() => onDelete(task.id)}
-          className="opacity-0 group-hover:opacity-100 transition-all p-1 rounded"
-          style={{color:'#cbd5e1'}}
-          onMouseOver={e => (e.currentTarget as HTMLElement).style.color='#ef4444'}
-          onMouseOut={e => (e.currentTarget as HTMLElement).style.color='#cbd5e1'}>
-          <Trash2 size={15} />
-        </button>
+        <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2">
+          {!task.completed && (
+            <button
+              onClick={() => onToggleTimer(task)}
+              className="w-full sm:w-auto justify-center px-3 py-2 rounded-lg text-xs font-medium inline-flex items-center gap-1"
+              style={{ backgroundColor: isRunning ? '#fef2f2' : '#f0fdf4', color: isRunning ? '#dc2626' : '#16a34a' }}
+            >
+              {isRunning ? <Pause size={11} /> : <Play size={11} />}
+              {isRunning ? 'Stop' : 'Start'}
+            </button>
+          )}
+
+          <button
+            onClick={() => onDelete(task.id)}
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-all"
+          >
+            <Trash2 size={14} />
+            Delete
+          </button>
+        </div>
       )}
     </div>
   )

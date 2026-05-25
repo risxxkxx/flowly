@@ -244,7 +244,7 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search board items and notes..." />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <div>
             <label className="label">Status</label>
             <select className="input" value={statusFilter} onChange={e => setStatusFilter(e.target.value as StatusFilter)}>
@@ -272,7 +272,7 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
             )
           })}
         </div>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p className="text-xs" style={{color:'#94a3b8'}}>
             Showing {filteredItems.length} of {items.length} items
           </p>
@@ -316,9 +316,9 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
                   onChange={e => setEditing({...editing, notes: e.target.value || null})}
                   placeholder="Add notes here..." />
               </div>
-              <div className="flex gap-3 pt-1">
-                <button onClick={() => setEditing(null)} className="btn-secondary flex-1">Cancel</button>
-                <button onClick={saveEdit} className="btn-primary flex-1" disabled={saving}>
+              <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                <button onClick={() => setEditing(null)} className="btn-secondary flex-1 justify-center">Cancel</button>
+                <button onClick={saveEdit} className="btn-primary flex-1 justify-center" disabled={saving}>
                   {saving && <Loader2 size={15} className="animate-spin" />}
                   Save
                 </button>
@@ -328,13 +328,13 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {visibleColumns.map(col => {
           const colItems = filteredItems.filter(i => i.status === col.key)
           return (
             <div key={col.key} className="flex flex-col gap-3">
-              <div className="flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between gap-3 px-1">
+                <div className="flex min-w-0 items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full" style={{backgroundColor: col.color}} />
                   <span className="text-sm font-semibold" style={{color: col.color}}>{col.label}</span>
                   <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
@@ -371,9 +371,9 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
                     value={form.notes}
                     onChange={e => setForm(f => ({...f, notes: e.target.value}))}
                     placeholder="Notes (optional)..." />
-                  <div className="flex gap-2">
-                    <button onClick={() => setAddingTo(null)} className="btn-secondary flex-1 py-2 text-xs">Cancel</button>
-                    <button onClick={() => addItem(col.key)} className="btn-primary flex-1 py-2 text-xs"
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button onClick={() => setAddingTo(null)} className="btn-secondary flex-1 justify-center py-2 text-xs">Cancel</button>
+                    <button onClick={() => addItem(col.key)} className="btn-primary flex-1 justify-center py-2 text-xs"
                       disabled={saving || !form.title.trim()}>
                       {saving ? <Loader2 size={13} className="animate-spin" /> : 'Add'}
                     </button>
@@ -394,9 +394,9 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
                   const dueColor = dateBucket === 'overdue' ? '#dc2626' : dateBucket === 'today' ? '#d97706' : '#94a3b8'
                   return (
                     <div key={item.id} className="card p-4 group">
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <p className="text-sm font-medium text-gray-900 flex-1 leading-snug">{item.title}</p>
-                        <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <p className="text-sm font-medium text-gray-900 flex-1 min-w-0 break-words leading-snug">{item.title}</p>
+                        <div className="flex items-center gap-1 flex-shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                           {isOwner && (
                             <>
                               <button onClick={() => setEditing(item)}
@@ -437,14 +437,14 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between gap-2 mt-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
                         <div className="flex items-center gap-1 text-xs" style={{color: isRunning ? '#16a34a' : '#94a3b8'}}>
                           <Clock size={11} />
                           {formatDuration(getItemSeconds(item, now))}
                         </div>
                         {isOwner && item.status !== 'done' && (
                           <button onClick={() => toggleTimer(item)}
-                            className="px-2 py-1 rounded-lg text-xs font-medium inline-flex items-center gap-1"
+                            className="w-full sm:w-auto justify-center px-2 py-1 rounded-lg text-xs font-medium inline-flex items-center gap-1"
                             style={{backgroundColor: isRunning ? '#fef2f2' : '#f0fdf4', color: isRunning ? '#dc2626' : '#16a34a'}}>
                             {isRunning ? <Pause size={11} /> : <Play size={11} />}
                             {isRunning ? 'Stop' : 'Start'}
@@ -460,7 +460,7 @@ export default function KanbanBoard({ projectId, userId, isOwner, initialItems }
                       )}
 
                       {isOwner && (
-                        <div className="flex gap-1 mt-3 pt-2" style={{borderTop:'1px solid #f1f5f9'}}>
+                        <div className="flex flex-col sm:flex-row gap-1 mt-3 pt-2" style={{borderTop:'1px solid #f1f5f9'}}>
                           {COLUMNS.filter(c => c.key !== col.key).map(c => (
                             <button key={c.key} onClick={() => moveItem(item, c.key)}
                               className="text-xs px-2 py-1 rounded-lg transition-all flex-1 font-medium"

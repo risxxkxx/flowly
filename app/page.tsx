@@ -59,15 +59,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
-        <div className="flex items-center gap-2">
+      <nav className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-5 sm:px-6 py-4 max-w-5xl mx-auto">
+        <div className="flex items-center justify-center sm:justify-start gap-2">
           <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
             <Shield size={15} className="text-white" />
           </div>
           <span className="font-semibold text-gray-900 tracking-tight">Flowly</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           <div className="flex items-center rounded-xl border border-gray-200 bg-white p-1">
             <button
               type="button"
@@ -96,27 +96,34 @@ export default function HomePage() {
           <Link href="/auth/login" className="btn-ghost">
             {t.signIn}
           </Link>
+
           <Link href="/auth/register" className="btn-primary">
             {t.startFree}
           </Link>
         </div>
       </nav>
 
-      <section className="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
-        <h1 className="text-6xl font-semibold text-gray-900 tracking-tight mb-6 leading-tight">
+      <section className="max-w-5xl mx-auto px-5 sm:px-6 pt-16 sm:pt-24 pb-16 sm:pb-20 text-center">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-900 tracking-tight mb-6 leading-tight">
           {t.title}
         </h1>
 
-        <p className="text-xl text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed">
           {t.subtitle}
         </p>
 
-        <div className="flex items-center justify-center gap-3">
-          <Link href="/auth/register" className="btn-primary text-base px-6 py-3">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/auth/register"
+            className="btn-primary w-full sm:w-auto justify-center text-base px-6 py-3"
+          >
             {t.startFree} <ArrowRight size={16} />
           </Link>
 
-          <Link href="/auth/login" className="btn-secondary text-base px-6 py-3">
+          <Link
+            href="/auth/login"
+            className="btn-secondary w-full sm:w-auto justify-center text-base px-6 py-3"
+          >
             {t.signIn}
           </Link>
         </div>
@@ -124,10 +131,10 @@ export default function HomePage() {
         <p className="mt-4 text-sm text-gray-400">{t.free}</p>
       </section>
 
-      <section className="max-w-5xl mx-auto px-6 pb-24">
+      <section className="max-w-5xl mx-auto px-5 sm:px-6 pb-20 sm:pb-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {features.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="card p-6">
+            <div key={title} className="card p-5 sm:p-6">
               <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4">
                 <Icon size={19} className="text-gray-700" />
               </div>
@@ -139,7 +146,7 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t py-8" style={{ borderColor: '#f1f5f9' }}>
-        <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-sm text-gray-400">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-400 text-center sm:text-left">
           <div className="flex items-center gap-2">
             <Shield size={14} />
             <span>Flowly</span>
