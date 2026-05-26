@@ -84,7 +84,11 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
   const [open, setOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [form, setForm] = useState<{ title: string; due_date: string; priority: Priority }>({ title: '', due_date: '', priority: 'medium' })
+  const [form, setForm] = useState<{ title: string; due_date: string; priority: Priority | '' }>({
+  title: '',
+  due_date: '',
+  priority: '',
+})
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('all')
@@ -125,7 +129,7 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
       category,
       project_id: projectId || null,
       due_date: form.due_date || null,
-      priority: form.priority,
+      priority: form.priority || null,
       completed: false,
       completed_at: null,
       total_seconds: 0,
@@ -134,7 +138,7 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
 
     if (error) { setError(error.message); setSaving(false); return }
     setTasks([data, ...tasks])
-    setForm({ title: '', due_date: '', priority: 'medium' })
+    setForm({ title: '', due_date: '', priority: '' })
     setOpen(false)
     setSaving(false)
   }
@@ -238,10 +242,16 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
               </div>
               <div>
                 <label className="label">Priority</label>
-                <select className="input" value={form.priority}
-                  onChange={e => setForm(f => ({...f, priority: e.target.value as Priority}))}>
-                  {PRIORITIES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
-                </select>
+                <select
+                className="input"
+                value={form.priority}
+               onChange={e => setForm(f => ({ ...f, priority: e.target.value as Priority | '' }))}
+               >
+               <option value="">No priority</option>
+               {PRIORITIES.map(p => (
+                <option key={p.value} value={p.value}>{p.label}</option>
+               ))}
+              </select>
               </div>
               {error && <div className="px-3.5 py-2.5 rounded-xl text-sm" style={{backgroundColor:'#fef2f2',color:'#dc2626',border:'1px solid #fecaca'}}>{error}</div>}
               <div className="flex flex-col sm:flex-row gap-3 pt-1">
@@ -360,7 +370,15 @@ export default function TaskList({ userId, category, projectId, readOnly }: Prop
   )
 }
 
-function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, border }: {
+function TaskRow({
+  task,
+  onToggle,
+  onDelete,
+  onToggleTimer,
+  now,
+  readOnly,
+  border,
+}: {
   task: Task
   onToggle: (t: Task) => void
   onDelete: (id: string) => void
@@ -373,18 +391,25 @@ function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, borde
   const seconds = getTaskSeconds(task, now)
   const priority = priorityStyle(task.priority)
   const bucket = getTaskBucket(task)
-  const dueColor = bucket === 'overdue' ? '#dc2626' : bucket === 'today' ? '#d97706' : '#94a3b8'
+  const dueColor =
+    bucket === 'overdue'
+      ? '#dc2626'
+      : bucket === 'today'
+        ? '#d97706'
+        : '#94a3b8'
 
   return (
     <div
-      className={`px-4 py-3 group transition-all duration-150 ${task.completed ? 'opacity-40' : ''}`}
+      className={`flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 group transition-all duration-150 ${
+        task.completed ? 'opacity-40' : ''
+      }`}
       style={border ? { borderTop: '1px solid #f1f5f9' } : {}}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
         {!readOnly && (
           <button
             onClick={() => onToggle(task)}
-            className="flex-shrink-0 pt-0.5 transition-colors"
+            className="flex-shrink-0 transition-colors mt-0.5 sm:mt-0"
             style={{ color: task.completed ? '#22c55e' : '#cbd5e1' }}
             aria-label={task.completed ? 'Mark task as open' : 'Mark task as completed'}
           >
@@ -394,20 +419,24 @@ function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, borde
 
         <div className="min-w-0 flex-1">
           <span
-            className={`block break-words text-sm leading-relaxed ${task.completed ? 'line-through' : 'text-gray-800'}`}
+            className={`block text-sm break-words ${
+              task.completed ? 'line-through' : 'text-gray-800'
+            }`}
             style={task.completed ? { color: '#94a3b8' } : {}}
           >
             {task.title}
           </span>
 
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <div
-              className="flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium"
-              style={{ backgroundColor: priority.bg, color: priority.color }}
-            >
-              <Flag size={10} />
-              {priority.label}
-            </div>
+          <div className="flex flex-wrap items-center gap-2 mt-2">
+            {task.priority && (
+              <div
+                className="flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium"
+                style={{ backgroundColor: priority.bg, color: priority.color }}
+              >
+                <Flag size={10} />
+                {priority.label}
+              </div>
+            )}
 
             {task.due_date && !task.completed && (
               <div className="flex items-center gap-1 text-xs" style={{ color: dueColor }}>
@@ -416,7 +445,10 @@ function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, borde
               </div>
             )}
 
-            <div className="flex items-center gap-1 text-xs" style={{ color: isRunning ? '#16a34a' : '#94a3b8' }}>
+            <div
+              className="flex items-center gap-1 text-xs"
+              style={{ color: isRunning ? '#16a34a' : '#94a3b8' }}
+            >
               <Clock size={11} />
               {formatDuration(seconds)}
             </div>
@@ -425,12 +457,15 @@ function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, borde
       </div>
 
       {!readOnly && (
-        <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2">
+        <div className="flex items-center justify-end gap-2 sm:flex-shrink-0">
           {!task.completed && (
             <button
               onClick={() => onToggleTimer(task)}
-              className="w-full sm:w-auto justify-center px-3 py-2 rounded-lg text-xs font-medium inline-flex items-center gap-1"
-              style={{ backgroundColor: isRunning ? '#fef2f2' : '#f0fdf4', color: isRunning ? '#dc2626' : '#16a34a' }}
+              className="px-2.5 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1"
+              style={{
+                backgroundColor: isRunning ? '#fef2f2' : '#f0fdf4',
+                color: isRunning ? '#dc2626' : '#16a34a',
+              }}
             >
               {isRunning ? <Pause size={11} /> : <Play size={11} />}
               {isRunning ? 'Stop' : 'Start'}
@@ -439,10 +474,10 @@ function TaskRow({ task, onToggle, onDelete, onToggleTimer, now, readOnly, borde
 
           <button
             onClick={() => onDelete(task.id)}
-            className="w-full sm:w-auto justify-center inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-all"
+            className="transition-all p-1.5 rounded text-slate-300 hover:text-red-500 hover:bg-red-50"
+            aria-label="Delete task"
           >
-            <Trash2 size={14} />
-            Delete
+            <Trash2 size={15} />
           </button>
         </div>
       )}
