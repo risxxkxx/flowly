@@ -1,106 +1,75 @@
 # Flowly
 
-Solar & BESS plant management platform built with Next.js 14 + Supabase.
+A full-stack productivity application for organising work and personal projects, managing tasks, tracking time, and reviewing progress.
 
-## Stack
+**Live demo:** https://flowly-vert.vercel.app/
 
-- **Next.js 14** — App Router, Server Components
-- **Supabase** — Database (PostgreSQL), Auth, Row Level Security
-- **Tailwind CSS** — Styling
-- **Vercel** — Hosting (free tier)
+## Overview
 
----
+Flowly was built as a practical workspace for keeping projects, tasks, and time tracking in one place. The goal was to create a clean interface that is easy to use while connecting a modern frontend with authentication, database logic, and protected user data.
 
-## Setup (step by step)
+## Features
 
-### 1. Create Supabase project
+- Email/password authentication
+- Work and personal project organisation
+- Task management
+- Time tracking
+- Project-level time statistics
+- Weekly completion overview
+- English and Macedonian interface
+- Protected user data with Supabase
+- Responsive dashboard
 
-1. Go to [supabase.com](https://supabase.com) and create a free account
-2. Click **New project**, give it a name (e.g. `flowly`), choose a region close to you
-3. Wait ~1 minute for it to spin up
-4. Go to **SQL Editor** → paste the entire contents of `supabase-schema.sql` → click **Run**
+## Tech Stack
 
-### 2. Get your Supabase keys
+- **Next.js 13** — App Router and React
+- **TypeScript**
+- **Supabase** — PostgreSQL database and authentication
+- **Tailwind CSS**
+- **date-fns**
+- **Vercel** — deployment
 
-1. In Supabase go to **Settings → API**
-2. Copy:
-   - **Project URL** (looks like `https://xxxxx.supabase.co`)
-   - **anon / public** key
+## What I worked on
 
-### 3. Configure the app
+I designed and implemented the application structure, frontend experience, authentication flow, database integration, project/task logic, time tracking, reporting views, localisation, and deployment.
 
-```bash
-cp .env.local.example .env.local
+A major part of the project was thinking about the full user flow rather than isolated screens: how a user signs in, how their projects and tasks are associated with their account, how tracked time is stored, and how that data is later presented in the dashboard.
+
+## Project Structure
+
+```text
+app/
+  auth/
+  dashboard/
+components/
+lib/
+  supabase/
+messages/
+types/
+middleware.ts
 ```
 
-Open `.env.local` and fill in:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-```
-
-### 4. Install and run
+## Local Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Create a `.env.local` file with your own Supabase project values:
 
----
-
-## Deploy to Vercel (free)
-
-1. Push your code to a GitHub repo
-2. Go to [vercel.com](https://vercel.com) → **New Project** → import your repo
-3. In **Environment Variables** add your two Supabase variables
-4. Click **Deploy** — done!
-
----
-
-## Features
-
-| Feature | Description |
-|---|---|
-| Auth | Email/password register & login via Supabase Auth |
-| Plants | Add solar/BESS plants with kW capacity and kWh storage |
-| Daily logs | Log daily production (kWh), SOC (%), and free-text notes per plant |
-| Tasks | To-do lists for Work and Chores categories |
-| Shared access | Invite another user by email to view a plant read-only |
-| Security | Row Level Security — users only see their own data |
-
----
-
-## Project structure
-
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
-app/
-  page.tsx                  ← Landing page
-  auth/
-    login/page.tsx          ← Login
-    register/page.tsx       ← Register
-  dashboard/
-    page.tsx                ← Overview
-    work/page.tsx           ← Work section
-    chores/page.tsx         ← Chores section
-    plants/[id]/page.tsx    ← Plant detail + daily logs
 
-components/
-  layout/DashboardLayout.tsx
-  plants/
-    AddPlantButton.tsx
-    DailyLogList.tsx
-    SharePlantButton.tsx
-  tasks/
-    TaskList.tsx
+## What I learned
 
-lib/supabase/
-  client.ts                 ← Browser client
-  server.ts                 ← Server client
+Flowly helped me strengthen my understanding of React/Next.js application structure, authentication, relational data, asynchronous data fetching, state handling, responsive UI development, and connecting frontend features to a real backend.
 
-types/index.ts              ← All TypeScript types
-middleware.ts               ← Auth route protection
-supabase-schema.sql         ← Run this in Supabase SQL Editor
-```
+## Author
+
+**Riste Kozarev**  
+Software Engineer focused on web applications, energy technology, and practical digital products.
+
+Portfolio: https://riste-kozarev.netlify.app/
