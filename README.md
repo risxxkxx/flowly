@@ -56,7 +56,7 @@ npm install
 npm run dev
 ```
 
-Create a `.env.local` file with your own Supabase project values:
+Copy the safe template and add your own Supabase project values locally:\n\n```bash\ncp .env.example .env.local\n```\n\nThen edit `.env.local`:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
