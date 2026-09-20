@@ -8,6 +8,13 @@ alter table public.tasks enable row level security;
 alter table public.items enable row level security;
 alter table public.project_access enable row level security;
 
+-- Baseline privilege hardening.
+-- This migration changes database permissions only when you run it manually in Supabase.
+ALTER FUNCTION public.handle_new_user() SET search_path = public, auth;
+REVOKE ALL ON public.users, public.projects, public.tasks, public.items, public.project_access FROM anon;
+GRANT SELECT, UPDATE ON public.users TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.projects, public.tasks, public.items, public.project_access TO authenticated;
+
 -- Remove old broad policies
 DROP POLICY IF EXISTS "Users can read all profiles" ON public.users;
 DROP POLICY IF EXISTS "Users can update own profile" ON public.users;
