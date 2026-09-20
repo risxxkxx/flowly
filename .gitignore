@@ -1,4 +1,14 @@
-node_modules
-.next
-.env.local
+# Dependencies / build output
+node_modules/
+.next/
+out/
 *.tsbuildinfo
+
+# Local environment files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Local deployment / OS metadata
+.vercel/
+.DS_Store
